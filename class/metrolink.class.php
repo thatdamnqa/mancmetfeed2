@@ -19,7 +19,7 @@ class Metrolink
         if (date('N') == 6 || date('N') == 7) return false;
 
         $date = date('H');
-        if ($date >= 7 && $date <= 10) return true;
+        if ($date >= 6 && $date <= 10) return true;
         if ($date >= 17 && $date <= 19) return true;
         return false;
     }

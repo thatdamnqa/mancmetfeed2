@@ -36,15 +36,15 @@ class Status
 
         if ($this->isGoodStatus($statuses)) {
             if ($this->metrolink->isPeak()) {
-                return "Good service on all lines";                
+                return "Good service on all lines";
             } else {
                 return '';
             }
         } else {
             $returnString = '';
             if (count($lines) > 0) {
-                for ($n=0; $n < count($lines); $n++) {
-                    $returnString .= $lines[$n] . ': ' . $statuses[$n] . ' ';
+                foreach ($lines as $n => $line) {
+                    $returnString .= $line . ': ' . $statuses[$n] . "\n";
                 }
             }
             return $returnString;

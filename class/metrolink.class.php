@@ -11,10 +11,6 @@ class Metrolink
      */
     public function isPeak()
     {
-        if (true == MMS_DEBUG) {
-            return true;
-        }
-
         // Always off-peak during weekends
         if (date('N') == 6 || date('N') == 7) return false;
 

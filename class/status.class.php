@@ -17,10 +17,15 @@ class Status
     /**
       * Returns true if all statuses are of a good service
       * (string to watch out for is in config)
+      * @param array|string Status: can be either a string or array of strings.
       */
-    private function isGoodStatus($statusArray)
+    private function isGoodStatus($status)
     {
-        foreach ($statusArray as $s) {
+        if (is_array($status)) {
+            $status = array($status);
+        }
+
+        foreach ($status as $s) {
             if ($s != MMS_GOOD_SERVICE_STRING) {
                 return false;
             } 
@@ -31,8 +36,15 @@ class Status
 
     public function getStatusString()
     {
-        $lines = $this->websiteHandler->getXPathContent(MMS_HOMEPAGE_URL, MMS_LINE_XPATH);
-        $statuses = $this->websiteHandler->getXPathContent(MMS_HOMEPAGE_URL, MMS_STATUS_XPATH);
+        $lines = $this->websiteHandler->getXPathContent(
+            MMS_HOMEPAGE_URL,
+            MMS_LINE_XPATH
+        );
+
+        $statuses = $this->websiteHandler->getXPathContent(
+            MMS_HOMEPAGE_URL,
+            MMS_STATUS_XPATH
+        );
 
         if ($this->isGoodStatus($statuses)) {
             if ($this->metrolink->isPeak()) {
@@ -44,12 +56,26 @@ class Status
             $returnString = '';
             if (count($lines) > 0) {
                 foreach ($lines as $n => $line) {
-                    $returnString .= $line . ': ' . $statuses[$n] . "\n";
+                    $returnString .= $this->generateStatusString(
+                        $returnString,
+                        $line,
+                        $statuses[$n]
+                    );
                 }
+                $returnString .= "Good service on all other lines.";
             }
             return $returnString;
         }
         
         return '...';
+    }
+
+    private function generateStatusString($returnString, $line, $status)
+    {
+        if (!$this->isGoodStatus($status)) {
+            $returnString .= "{$status} on {$line} line\n";
+        }
+
+        return $returnString;
     }
 }

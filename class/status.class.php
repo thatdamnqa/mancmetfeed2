@@ -21,7 +21,7 @@ class Status
       */
     private function isGoodStatus($status)
     {
-        if (is_array($status)) {
+        if (!is_array($status)) {
             $status = array($status);
         }
 

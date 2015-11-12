@@ -57,7 +57,6 @@ class Status
             if (count($lines) > 0) {
                 foreach ($lines as $n => $line) {
                     $returnString .= $this->generateStatusString(
-                        $returnString,
                         $line,
                         $statuses[$n]
                     );
@@ -70,12 +69,12 @@ class Status
         return '...';
     }
 
-    private function generateStatusString($returnString, $line, $status)
+    private function generateStatusString($line, $status)
     {
         if (!$this->isGoodStatus($status)) {
-            $returnString .= "{$status} on {$line} line\n";
+            return $returnString = "{$status} on {$line} line\n";
         }
 
-        return $returnString;
+        return null;
     }
 }

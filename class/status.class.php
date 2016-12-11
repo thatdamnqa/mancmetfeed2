@@ -56,10 +56,15 @@ class Status
                 return '';
             }
         } else {
-            $returnString = "$hour: ";
+            if ($this->metrolink->isPeak()) {
+                $returnString = "$hour: ";
+            } else {
+                $returnString = '';
+            }
             if (count($lines) > 0) {
                 foreach ($lines as $n => $line) {
                     $returnString .= $this->generateStatusString(
+                        $n,
                         $line,
                         $statuses[$n]
                     );
@@ -72,20 +77,22 @@ class Status
         return '...';
     }
 
-    private function generateStatusString($line, $status)
+    private function generateStatusString($n, $line, $status)
     {
+        $returnString = '';
+
         if ($status != $this->previous_status) {
+            if ($n != 0) $returnString = "\n"; //If it's not the first line, add a linebreak as it's a new status
             $this->previous_status = $status;
             if (!$this->isGoodStatus($status)) {
-                return $returnString = "\n{$status} on {$line} line";
+                $returnString .= "{$status} on {$line} line";
             }
         } else {
             if (!$this->isGoodStatus($status)) {
-                return $returnString = ", {$line} line";
+                $returnString .= ", {$line} line";
             }
         }
 
-
-        return null;
+        return $returnString;
     }
 }

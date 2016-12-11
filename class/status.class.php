@@ -7,6 +7,7 @@ class Status
 {
     private $websiteHandler;
     private $metrolink;
+    private $previous_status;
 
     public function __construct($websiteHandler, $metrolink)
     {
@@ -63,7 +64,7 @@ class Status
                         $statuses[$n]
                     );
                 }
-                $returnString .= "Good service on all other lines.";
+                $returnString .= "\nGood service on all other lines.";
             }
             return $returnString;
         }
@@ -73,9 +74,17 @@ class Status
 
     private function generateStatusString($line, $status)
     {
-        if (!$this->isGoodStatus($status)) {
-            return $returnString = "{$status} on {$line} line\n";
+        if ($status != $this->previous_status) {
+            $this->previous_status = $status;
+            if (!$this->isGoodStatus($status)) {
+                return $returnString = "\n{$status} on {$line} line";
+            }
+        } else {
+            if (!$this->isGoodStatus($status)) {
+                return $returnString = ", {$line} line";
+            }
         }
+
 
         return null;
     }

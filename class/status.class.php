@@ -46,14 +46,16 @@ class Status
             MMS_STATUS_XPATH
         );
 
+        $hour = date('ga');
+
         if ($this->isGoodStatus($statuses)) {
             if ($this->metrolink->isPeak()) {
-                return "Good service on all lines";
+                return "$hour: Good service on all lines";
             } else {
                 return '';
             }
         } else {
-            $returnString = '';
+            $returnString = "$hour: ";
             if (count($lines) > 0) {
                 foreach ($lines as $n => $line) {
                     $returnString .= $this->generateStatusString(

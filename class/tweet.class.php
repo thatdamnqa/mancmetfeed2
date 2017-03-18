@@ -14,14 +14,27 @@ class Tweet
      * @param $body
      * @return array or false if no data
      */
-    public function generate($body)
+    public function generate($status)
     {
-        if ($body == '') return null;
-        
+        if ($status == '') return null;
         $tweetlength = 140;
-        $tweet = $body;
 
-        return str_split($tweet, $tweetlength);
+        // Splits into tweet-length number of characters, breaking at
+        // new line
+        $tweet_lines = explode("\n", $status);
+        $tweets = [''];
+        foreach ($tweet_lines as $n => $line) {
+                $current_tweet_id = count($tweets) - 1;
+                $length_of_current_tweet = strlen($tweets[$current_tweet_id]);
+                $length_of_line_to_add = strlen($line);
+                if ($length_of_current_tweet + $length_of_line_to_add < $tweetlength) {
+                    $tweets[$current_tweet_id] .= $line . "\n";
+                } else {
+                    $tweets[] = $line;
+                }
+        }
+
+        return $tweets;
     }
 
     public function post($tweet)

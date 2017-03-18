@@ -16,12 +16,10 @@ $tweets = $tweetClass->generate($statusString);
 
 if (null == $tweets) {
 } else {
-    //Reverse tweets so that in a twitter stream it looks easier to read
-    if (MMS_DEBUG === false) {
-        $tweets = array_reverse($tweets);
-    }
-
     foreach ($tweets as $t) {
         $tweetClass->post($t);
+        if (MMS_DEBUG === true) {
+            echo "---\n";
+        }
     }
 }

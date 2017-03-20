@@ -30,7 +30,7 @@ class Tweet
                 if ($length_of_current_tweet + $length_of_line_to_add < $tweetlength) {
                     $tweets[$current_tweet_id] .= $line . "\n";
                 } else {
-                    $tweets[] = $line;
+                    $tweets[] = $line . "\n";
                 }
         }
 

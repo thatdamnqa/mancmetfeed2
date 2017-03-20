@@ -7,14 +7,13 @@ class Status
 {
     private $websiteHandler;
     private $metrolink;
-    private $previous_status = null;
 
     public function __construct($websiteHandler, $metrolink)
     {
         $this->websiteHandler = $websiteHandler;
         $this->metrolink = $metrolink;
     }
-    
+
     /**
       * Returns true if all statuses are of a good service
       * (string to watch out for is in config)
@@ -29,9 +28,9 @@ class Status
         foreach ($status as $s) {
             if ($s != MMS_GOOD_SERVICE_STRING) {
                 return false;
-            } 
+            }
         }
-        
+
         return true;
     }
 
@@ -72,22 +71,16 @@ class Status
             }
             return $returnString;
         }
-        
+
         return '...';
     }
 
     private function generateStatusString($line, $status)
     {
         $returnString = '';
-        if ($status != $this->previous_status) {
-            $this->previous_status = $status;
-            if (!$this->isGoodStatus($status)) {
-                $returnString .= "{$status} on {$line} line\n";
-            }
-        } else {
-            if (!$this->isGoodStatus($status)) {
-                $returnString .= "{$line} line\n";
-            }
+        $this->previous_status = $status;
+        if (!$this->isGoodStatus($status)) {
+            $returnString .= "{$status} on {$line} line\n";
         }
 
         return $returnString;

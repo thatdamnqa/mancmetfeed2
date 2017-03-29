@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_set('UTC');
+date_default_timezone_set('Europe/London');
 
 
 define('MMS_DEBUG', false); // Turns off tweeting, outputs to the console instead

@@ -94,16 +94,17 @@ class Twitter
     /**
      * Sends message to the Twitter.
      * @param string   message encoded in UTF-8
+     * @param int $in_reply_to_status_id The ID of an existing status that the update is in reply to
      * @return mixed   ID on success or FALSE on failure
      * @throws TwitterException
      */
-    public function send($message)
+    public function send($message, $in_reply_to_status_id = null)
     {
         if (iconv_strlen($message, 'UTF-8') > 140) {
             $message = preg_replace_callback('#https?://\S+[^:);,.!?\s]#', array($this, 'shortenUrl'), $message);
         }
 
-        $res = $this->request('statuses/update', array('status' => $message));
+        $res = $this->request('statuses/update', array('status' => $message, 'in_reply_to_status_id' => $in_reply_to_status_id));
         return $res->id ? (string) $res->id : FALSE;
     }
 

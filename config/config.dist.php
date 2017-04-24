@@ -9,6 +9,7 @@ define('MMS_LINE_XPATH', "//*[contains(@class,'line-symbol')]");
 define('MMS_STATUS_XPATH', '//*[@class="service-status"]');
 define('MMS_GOOD_SERVICE_STRING', 'Good Service');
 
+define('TWITTER_USERNAME',       '@MancMetFeed');
 define('TWITTER_CONSUMERKEY',    '');
 define('TWITTER_CONSUMERSECRET', '');
 define(

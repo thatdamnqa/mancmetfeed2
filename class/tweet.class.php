@@ -37,18 +37,37 @@ class Tweet
         return $tweets;
     }
 
-    public function post($tweet)
+    /**
+     * Send out Tweet to Twitter
+     * Or print to console if MMS_DEBUG is set to `true`
+     *
+     * @param string $tweet
+     * @param int $original_tweet_id The ID of the first tweet, used so that future tweets are a reply chain.
+     * @return bool|string True if sent to console, false on failure, tweet ID on success
+     */
+    public function post($tweet, $original_tweet_id = null)
     {
+        // Twitter API rules say that all reply-to tweets should contain
+        // the original tweeter's username.
+        //
+        // Tweet character limits ignore @usernames at the start, so we don't
+        // need to worry about this.
+        if ($original_tweet_id) {
+            //$tweet = TWITTER_USERNAME . ' ' . $tweet;
+        }
+
         if (true == MMS_DEBUG) {
             echo $tweet;
-        } else {
-            $twitter = new Twitter(
-                TWITTER_CONSUMERKEY,
-                TWITTER_CONSUMERSECRET,
-                TWITTER_ACCESSTOKEN,
-                TWITTER_ACCESSTOKENSECRET
-            );
-            $twitter->send($tweet);
+            return true;
         }
+
+        $twitter = new Twitter(
+            TWITTER_CONSUMERKEY,
+            TWITTER_CONSUMERSECRET,
+            TWITTER_ACCESSTOKEN,
+            TWITTER_ACCESSTOKENSECRET
+        );
+
+        return $twitter->send($tweet, $original_tweet_id);
     }
 }

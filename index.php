@@ -16,8 +16,14 @@ $tweets = $tweetClass->generate($statusString);
 
 if (null == $tweets) {
 } else {
-    foreach ($tweets as $t) {
-        $tweetClass->post($t);
+    $first_tweet_id = null;
+    foreach ($tweets as $key => $t) {
+        $tweetid = $tweetClass->post($t, $first_tweet_id);
+
+        if ($key == 0 && $tweetid) {
+            $first_tweet_id = $tweetid;
+        }
+
         if (MMS_DEBUG === true) {
             echo "---\n";
         }

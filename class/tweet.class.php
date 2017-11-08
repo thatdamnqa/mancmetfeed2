@@ -17,7 +17,7 @@ class Tweet
     public function generate($status)
     {
         if ($status == '') return null;
-        $tweetlength = 140;
+        $tweetlength = 280;
 
         // Splits into tweet-length number of characters, breaking at
         // new line

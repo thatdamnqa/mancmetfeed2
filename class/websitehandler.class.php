@@ -1,9 +1,10 @@
 <?php
+require_once 'promises/websitehandler.interface.php';
 
 /**
   * Handle the Metrolink website
   **/
-class WebsiteHandler
+class WebsiteHandler implements WebsiteHandlerInterface
 {
     private $html;
     
@@ -23,7 +24,7 @@ class WebsiteHandler
      * @param $url
      * @return string
      */
-    public function getHtml($url)
+    private function getHtml($url)
     {
         if ($this->html != null) return $this->html; 
         

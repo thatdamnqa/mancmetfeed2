@@ -1,9 +1,10 @@
 <?php
+require_once 'promises/metrolink.interface.php';
 
 /**
   * Gets various Metrolink variables
   **/
-class Metrolink
+class Metrolink implements MetrolinkInterface
 {
     /**
       * The current server time day

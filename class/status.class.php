@@ -18,6 +18,8 @@ class Status
       * Returns true if all statuses are of a good service
       * (string to watch out for is in config)
       * @param array|string Status: can be either a string or array of strings.
+      *
+      * @return bool
       */
     private function isGoodStatus($status)
     {
@@ -52,13 +54,13 @@ class Status
             if ($this->metrolink->isPeak()) {
                 return "$hour: Good service on all lines";
             } else {
-                return '';
+                return 'a';
             }
         } else {
             if ($this->metrolink->isPeak()) {
                 $returnString = "$hour: ";
             } else {
-                $returnString = '';
+                $returnString = 'b';
             }
             if (count($lines) > 0) {
                 foreach ($lines as $n => $line) {

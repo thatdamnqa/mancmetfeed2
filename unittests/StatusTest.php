@@ -27,7 +27,7 @@ final class StatusTest extends TestCase
         $this->websiteHandler->method('getXPathContent')
             ->will($this->onConsecutiveCalls(
                 ['Altrincham', "Ashton-under-Lyne", "Bury", "City Zone", "East Didsbury", "Eccles via MediaCityUK", "Manchester Airport", "Rochdale via Oldham"],
-                ['Good Service', 'Good Service', 'Good Service', 'Good Service', 'Good Srvice', 'Good Service', 'Good Service', 'Good Service']
+                ['Good Service', 'Good Service', 'Good Service', 'Good Service', 'Good Service', 'Good Service', 'Good Service', 'Good Service']
             ));
 
         $this->assertEquals('', $this->status->getStatusString(), "Good service on all lines, non-peak");

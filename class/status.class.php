@@ -54,13 +54,13 @@ class Status
             if ($this->metrolink->isPeak()) {
                 return "$hour: Good service on all lines";
             } else {
-                return 'a';
+                return '';
             }
         } else {
             if ($this->metrolink->isPeak()) {
                 $returnString = "$hour: ";
             } else {
-                $returnString = 'b';
+                $returnString = '';
             }
             if (count($lines) > 0) {
                 foreach ($lines as $n => $line) {

@@ -19,6 +19,11 @@ class Tweet
         if ($status == '') return null;
         $tweetlength = 280;
 
+        // Append the announcement if there is one
+        if ('' != ANNOUNCEMENT) {
+            $status .= "\n\n". ANNOUNCEMENT;
+        }
+
         // Splits into tweet-length number of characters, breaking at
         // new line
         $tweet_lines = explode("\n", $status);

@@ -1,6 +1,7 @@
 <?php
 date_default_timezone_set('Europe/London');
 
+define('ANNOUNCEMENT', ''); // Append an announcement at the end of all non-blank tweets
 
 define('MMS_DEBUG', false); // Turns off tweeting, outputs to the console instead
 

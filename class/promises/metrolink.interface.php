@@ -11,12 +11,12 @@ interface MetrolinkInterface
     /**
      * Mock the current day
      */
-    function set_current_day($day);
+    function setCurrentDay($day);
 
     /**
      * Mock the current hour
      */
-    function set_current_hour($hour);
+    function setCurrentHour($hour);
 
     /**
      * Checks peak hours: if it is, then post normal service tweets as well

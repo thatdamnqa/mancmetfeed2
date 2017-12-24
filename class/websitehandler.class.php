@@ -6,29 +6,37 @@ require_once 'promises/websitehandler.interface.php';
   **/
 class WebsiteHandler implements WebsiteHandlerInterface
 {
+    /**
+     * @var string Cached data from the API
+     */
     private $html;
-    
-    private function cleanseText($string)
-    {
-        $string = trim(
-            $string,
-            " \t\n\r\0\x0B "
-        );
 
-        return $string;
+    /**
+     * @var string API url
+     */
+    private $url;
+
+    /**
+     * WebsiteHandler constructor.
+     *
+     * @param $url string API url
+     */
+    public function __construct($url)
+    {
+        $this->url = $url;
     }
-    
-    
+
     /**
      * Load a URL and return HTML contents
      * @param $url
      * @return string
      */
-    private function getHtml($url)
+    private function getFromUrl()
     {
+        // Simple caching
         if ($this->html != null) return $this->html; 
         
-        $handle = fopen($url, "rb");
+        $handle = fopen($this->url, "rb");
         $contents = stream_get_contents($handle);
         fclose($handle);
 
@@ -36,34 +44,19 @@ class WebsiteHandler implements WebsiteHandlerInterface
         return $contents;
     }
 
-
     /**
-     * Scrape a string from a given URL
-     * @param $url URL to scrape
-     * @param $xpath XPath of string to return
-     * @return string
+     * @return array Array of the Metrolink status info
+     * @throws Exception Throws exception if the API is down
      */
-    public function getXPathContent($url, $xpath)
+    public function getMetrolinkStatus()
     {
-        $html = $this->getHtml($url);
-        $dom = new DOMDocument();
-        @$dom->loadHTML($html);
-        $domxpath = new DOMXPath($dom);
+        $json = $this->getFromUrl($this->url);
+        $decoded_json = json_decode($json);
 
-        $tags = $domxpath->query($xpath);
-
-        $returnArray = [];
-
-        if ($tags->length > 0) {
-            for ($n=0; $n<$tags->length; $n++) {
-                $content = $this->cleanseText($tags->item($n)->textContent);
-            
-                if ($content != '') {
-                    $returnArray[] = $content;
-                }
-            }
+        if ('' == $json || null == $decoded_json) {
+            throw new Exception("API is not working");
         }
 
-        return $returnArray;
+        return $decoded_json;
     }
 }

@@ -7,7 +7,7 @@ require_once('class/metrolink.class.php');
 
 $tweetClass = new Tweet();
 $metrolinkClass = new Metrolink();
-$websiteHandlerClass = new WebsiteHandler();
+$websiteHandlerClass = new WebsiteHandler(MMS_API_URL);
 $statusClass = new Status($websiteHandlerClass, $metrolinkClass);
 
 $statusString = $statusClass->getStatusString();

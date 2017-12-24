@@ -15,23 +15,23 @@ final class MetrolinkTest extends TestCase
     public function testIsPeak()
     {
         // Not peak 4pm Monday
-        $this->metrolink->set_current_hour('16');
-        $this->metrolink->set_current_day('1'); //Monday
+        $this->metrolink->setCurrentHour('16');
+        $this->metrolink->setCurrentDay('1'); //Monday
         $this->assertEquals($this->metrolink->isPeak(), false, "4pm should not be peak");
 
         // IS peak 5pm Monday
-        $this->metrolink->set_current_hour('17');
-        $this->metrolink->set_current_day('1'); //Monday
+        $this->metrolink->setCurrentHour('17');
+        $this->metrolink->setCurrentDay('1'); //Monday
         $this->assertEquals($this->metrolink->isPeak(), true, "5pm SHOULD be peak");
 
         // Not peak on Saturday 4pm
-        $this->metrolink->set_current_hour('16');
-        $this->metrolink->set_current_day('6'); //Saturday
+        $this->metrolink->setCurrentHour('16');
+        $this->metrolink->setCurrentDay('6'); //Saturday
         $this->assertEquals($this->metrolink->isPeak(), false, "4pm weekends should not be peak");
 
         // Not peak on Saturday 5pm
-        $this->metrolink->set_current_hour('17');
-        $this->metrolink->set_current_day('6'); //Saturday
+        $this->metrolink->setCurrentHour('17');
+        $this->metrolink->setCurrentDay('6'); //Saturday
         $this->assertEquals($this->metrolink->isPeak(), false, "5pm weekends should not be peak");
     }
 }

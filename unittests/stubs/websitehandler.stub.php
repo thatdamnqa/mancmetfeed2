@@ -60,7 +60,7 @@ class WebsiteHandlerStub implements WebsiteHandlerInterface
                         "items": 
                         [
                             {
-                                "name": "Other lines",
+                                "name": "All lines",
                                 "severity": "success",
                                 "status": "Good service"
                             }

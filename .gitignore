@@ -1,2 +1,4 @@
 config.php
-.idea/
+.idea
+vendor
+build

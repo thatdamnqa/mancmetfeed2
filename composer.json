@@ -1,5 +1,33 @@
 {
+    "name" : "thatdamnqa/mancmetfeed",
+    "description" : "Manchester Metrolink Status tweetbot",
+    "type" : "libray",
+    "license" : "public domain",
+    "authors" : [{
+        "name": "Daniel Shaw",
+        "email": "dan@thatdamnqa.co.uk",
+        "homepage": "http://example.org",
+        "role": "Developer"
+    }],
+    "require" : {
+        "php" : "^7.0",
+        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/oauth-subscriber": "^0.3.0"
+    },
     "require-dev": {
         "phpunit/phpunit": "^6.0"
+    },
+    "autoload" : {
+        "psr-4" : {
+            "ThatDamnQA\\MancMetFeed\\" : "src/"
+        }
+    },
+    "autoload-dev" : {
+        "psr-4" : {
+            "ThatDamnQA\\MancMetFeedTest\\" : "tests/"
+        }
+    },
+    "config" : {
+        "sort-packages" : true
     }
 }

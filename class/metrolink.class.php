@@ -9,35 +9,15 @@ class Metrolink implements MetrolinkInterface
     /**
       * The current server time day
       */
-    private $currentDay;
+    private $now;
 
-    /**
-      * The current server time hour
-      */
-    private $currentHour;
-
-
-    public function __construct() {
-        $this->setCurrentHour(date('H'));
-        $this->setCurrentDay(date('N'));
-    }
-
-    /**
-      * Mock the current day
-      */
-    public function setCurrentDay($day) {
-        $this->currentDay = $day;
-    }
-
-    /**
-      * Mock the current hour
-      */
-    public function setCurrentHour($hour) {
-        $this->currentHour = $hour;
+    public function __construct(DateTimeInterface $date)
+    {
+        $this->now = $date;
     }
 
     public function getCurrentHour() {
-        return $this->currentHour;
+        return $this->now->format('H');
     }
 
     /**
@@ -46,11 +26,20 @@ class Metrolink implements MetrolinkInterface
      */
     public function isPeak()
     {
+        $currentHour = $this->getCurrentHour();
+        $currentWeekday = $this->now->format('N');
         // Always off-peak during weekends
-        if ($this->currentDay == 6 || $this->currentDay == 7) return false;
+        if ($currentWeekday == 6 || $currentWeekday == 7) {
+            return false;
+        }
 
-        if ($this->currentHour >= 6 && $this->currentHour <= 10) return true;
-        if ($this->currentHour >= 17 && $this->currentHour <= 19) return true;
+        if ($currentHour >= 6 && $currentHour <= 10) {
+            return true;
+        }
+        if ($currentHour >= 17 && $currentHour <= 19) {
+            return true;
+        }
+
         return false;
     }
 }

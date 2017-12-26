@@ -17,7 +17,7 @@ class Metrolink implements MetrolinkInterface
     }
 
     public function getCurrentHour() {
-        return $this->now->format('H');
+        return $this->now->format('G');
     }
 
     /**

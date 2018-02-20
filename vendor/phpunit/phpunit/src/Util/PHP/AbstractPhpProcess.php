@@ -13,11 +13,11 @@ namespace PHPUnit\Util\PHP;
 use __PHP_Incomplete_Class;
 use ErrorException;
 use PHPUnit\Framework\Exception;
-use PHPUnit\Framework\TestResult;
-use PHPUnit\Framework\TestFailure;
-use PHPUnit\Framework\Test;
 use PHPUnit\Framework\SyntheticError;
-use PHPUnit\Util\InvalidArgumentHelper;
+use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestFailure;
+use PHPUnit\Framework\TestResult;
 use SebastianBergmann\Environment\Runtime;
 
 /**
@@ -46,7 +46,7 @@ abstract class AbstractPhpProcess
     protected $args = '';
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     protected $env = [];
 
@@ -68,16 +68,11 @@ abstract class AbstractPhpProcess
      *
      * Then $stderrRedirection is TRUE, STDERR is redirected to STDOUT.
      *
-     * @throws Exception
      *
      * @param bool $stderrRedirection
      */
-    public function setUseStderrRedirection($stderrRedirection)
+    public function setUseStderrRedirection(bool $stderrRedirection): void
     {
-        if (!is_bool($stderrRedirection)) {
-            throw InvalidArgumentHelper::factory(1, 'boolean');
-        }
-
         $this->stderrRedirection = $stderrRedirection;
     }
 
@@ -86,7 +81,7 @@ abstract class AbstractPhpProcess
      *
      * @return bool
      */
-    public function useStderrRedirection()
+    public function useStderrRedirection(): bool
     {
         return $this->stderrRedirection;
     }
@@ -96,7 +91,7 @@ abstract class AbstractPhpProcess
      *
      * @param string $stdin
      */
-    public function setStdin($stdin)
+    public function setStdin($stdin): void
     {
         $this->stdin = (string) $stdin;
     }
@@ -106,7 +101,7 @@ abstract class AbstractPhpProcess
      *
      * @return string
      */
-    public function getStdin()
+    public function getStdin(): string
     {
         return $this->stdin;
     }
@@ -116,7 +111,7 @@ abstract class AbstractPhpProcess
      *
      * @param string $args
      */
-    public function setArgs($args)
+    public function setArgs($args): void
     {
         $this->args = (string) $args;
     }
@@ -126,7 +121,7 @@ abstract class AbstractPhpProcess
      *
      * @retrun string
      */
-    public function getArgs()
+    public function getArgs(): string
     {
         return $this->args;
     }
@@ -134,9 +129,9 @@ abstract class AbstractPhpProcess
     /**
      * Sets the array of environment variables to start the child process with
      *
-     * @param array $env
+     * @param array<string, string> $env
      */
-    public function setEnv(array $env)
+    public function setEnv(array $env): void
     {
         $this->env = $env;
     }
@@ -144,9 +139,9 @@ abstract class AbstractPhpProcess
     /**
      * Returns the array of environment variables to start the child process with
      *
-     * @return array
+     * @return array<string, string>
      */
-    public function getEnv()
+    public function getEnv(): array
     {
         return $this->env;
     }
@@ -156,7 +151,7 @@ abstract class AbstractPhpProcess
      *
      * @param int $timeout
      */
-    public function setTimeout($timeout)
+    public function setTimeout($timeout): void
     {
         $this->timeout = (int) $timeout;
     }
@@ -166,7 +161,7 @@ abstract class AbstractPhpProcess
      *
      * @return int
      */
-    public function getTimeout()
+    public function getTimeout(): int
     {
         return $this->timeout;
     }
@@ -174,9 +169,9 @@ abstract class AbstractPhpProcess
     /**
      * @return AbstractPhpProcess
      */
-    public static function factory()
+    public static function factory(): self
     {
-        if (DIRECTORY_SEPARATOR == '\\') {
+        if (DIRECTORY_SEPARATOR === '\\') {
             return new WindowsPhpProcess;
         }
 
@@ -190,9 +185,10 @@ abstract class AbstractPhpProcess
      * @param Test       $test
      * @param TestResult $result
      *
-     * @throws Exception
+     * @throws \Exception
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
-    public function runTestJob($job, Test $test, TestResult $result)
+    public function runTestJob($job, Test $test, TestResult $result): void
     {
         $result->startTest($test);
 
@@ -210,32 +206,32 @@ abstract class AbstractPhpProcess
      * Returns the command based into the configurations.
      *
      * @param array       $settings
-     * @param string|null $file
+     * @param null|string $file
      *
      * @return string
      */
-    public function getCommand(array $settings, $file = null)
+    public function getCommand(array $settings, $file = null): string
     {
         $command = $this->runtime->getBinary();
         $command .= $this->settingsToParameters($settings);
 
-        if ('phpdbg' === PHP_SAPI) {
+        if (PHP_SAPI === 'phpdbg') {
             $command .= ' -qrr ';
 
             if ($file) {
-                $command .= '-e ' . escapeshellarg($file);
+                $command .= '-e ' . \escapeshellarg($file);
             } else {
-                $command .= escapeshellarg(__DIR__ . '/eval-stdin.php');
+                $command .= \escapeshellarg(__DIR__ . '/eval-stdin.php');
             }
         } elseif ($file) {
-            $command .= ' -f ' . escapeshellarg($file);
+            $command .= ' -f ' . \escapeshellarg($file);
         }
 
         if ($this->args) {
             $command .= ' -- ' . $this->args;
         }
 
-        if (true === $this->stderrRedirection) {
+        if ($this->stderrRedirection === true) {
             $command .= ' 2>&1';
         }
 
@@ -249,22 +245,20 @@ abstract class AbstractPhpProcess
      * @param array  $settings
      *
      * @return array
-     *
-     * @throws Exception
      */
-    abstract public function runJob($job, array $settings = []);
+    abstract public function runJob($job, array $settings = []): array;
 
     /**
      * @param array $settings
      *
      * @return string
      */
-    protected function settingsToParameters(array $settings)
+    protected function settingsToParameters(array $settings): string
     {
         $buffer = '';
 
         foreach ($settings as $setting) {
-            $buffer .= ' -d ' . $setting;
+            $buffer .= ' -d ' . \escapeshellarg($setting);
         }
 
         return $buffer;
@@ -277,35 +271,39 @@ abstract class AbstractPhpProcess
      * @param TestResult $result
      * @param string     $stdout
      * @param string     $stderr
+     *
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     * @throws \Exception
      */
-    private function processChildResult(Test $test, TestResult $result, $stdout, $stderr)
+    private function processChildResult(Test $test, TestResult $result, $stdout, $stderr): void
     {
         $time = 0;
 
         if (!empty($stderr)) {
             $result->addError(
                 $test,
-                new Exception(trim($stderr)),
+                new Exception(\trim($stderr)),
                 $time
             );
         } else {
-            set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+            \set_error_handler(function ($errno, $errstr, $errfile, $errline): void {
                 throw new ErrorException($errstr, $errno, $errno, $errfile, $errline);
             });
+
             try {
-                if (strpos($stdout, "#!/usr/bin/env php\n") === 0) {
-                    $stdout = substr($stdout, 19);
+                if (\strpos($stdout, "#!/usr/bin/env php\n") === 0) {
+                    $stdout = \substr($stdout, 19);
                 }
 
-                $childResult = unserialize(str_replace("#!/usr/bin/env php\n", '', $stdout));
-                restore_error_handler();
+                $childResult = \unserialize(\str_replace("#!/usr/bin/env php\n", '', $stdout));
+                \restore_error_handler();
             } catch (ErrorException $e) {
-                restore_error_handler();
+                \restore_error_handler();
                 $childResult = false;
 
                 $result->addError(
                     $test,
-                    new Exception(trim($stdout), 0, $e),
+                    new Exception(\trim($stdout), 0, $e),
                     $time
                 );
             }
@@ -315,11 +313,13 @@ abstract class AbstractPhpProcess
                     $output = $childResult['output'];
                 }
 
+                /* @var TestCase $test */
+
                 $test->setResult($childResult['testResult']);
                 $test->addToAssertionCount($childResult['numAssertions']);
 
+                /** @var TestResult $childResult */
                 $childResult = $childResult['result'];
-                /* @var $childResult TestResult */
 
                 if ($result->getCollectCodeCoverageInformation()) {
                     $result->getCodeCoverage()->merge(
@@ -383,27 +383,27 @@ abstract class AbstractPhpProcess
     }
 
     /**
-     * Gets the thrown exception from a PHPUnit_Framework_TestFailure.
+     * Gets the thrown exception from a PHPUnit\Framework\TestFailure.
      *
      * @param TestFailure $error
      *
      * @return Exception
      *
-     * @see    https://github.com/sebastianbergmann/phpunit/issues/74
+     * @see https://github.com/sebastianbergmann/phpunit/issues/74
      */
-    private function getException(TestFailure $error)
+    private function getException(TestFailure $error): Exception
     {
         $exception = $error->thrownException();
 
         if ($exception instanceof __PHP_Incomplete_Class) {
             $exceptionArray = [];
             foreach ((array) $exception as $key => $value) {
-                $key                  = substr($key, strrpos($key, "\0") + 1);
+                $key                  = \substr($key, \strrpos($key, "\0") + 1);
                 $exceptionArray[$key] = $value;
             }
 
             $exception = new SyntheticError(
-                sprintf(
+                \sprintf(
                     '%s: %s',
                     $exceptionArray['_PHP_Incomplete_Class_Name'],
                     $exceptionArray['message']

@@ -21,11 +21,14 @@ use PHPUnit\Framework\Exception;
  */
 class WindowsPhpProcess extends DefaultPhpProcess
 {
-    protected $useTempFile = true;
-
-    protected function getHandles()
+    public function getCommand(array $settings, $file = null): string
     {
-        if (false === $stdout_handle = tmpfile()) {
+        return '"' . parent::getCommand($settings, $file) . '"';
+    }
+
+    protected function getHandles(): array
+    {
+        if (false === $stdout_handle = \tmpfile()) {
             throw new Exception(
                 'A temporary file could not be created; verify that your TEMP environment variable is writable'
             );
@@ -36,8 +39,8 @@ class WindowsPhpProcess extends DefaultPhpProcess
         ];
     }
 
-    public function getCommand(array $settings, $file = null)
+    protected function useTemporaryFile(): bool
     {
-        return '"' . parent::getCommand($settings, $file) . '"';
+        return true;
     }
 }

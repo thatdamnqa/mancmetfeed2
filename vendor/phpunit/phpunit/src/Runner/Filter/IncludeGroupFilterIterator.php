@@ -16,8 +16,8 @@ class IncludeGroupFilterIterator extends GroupFilterIterator
      *
      * @return bool
      */
-    protected function doAccept($hash)
+    protected function doAccept($hash): bool
     {
-        return in_array($hash, $this->groupTests);
+        return \in_array($hash, $this->groupTests);
     }
 }

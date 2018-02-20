@@ -18,12 +18,7 @@ use Throwable;
 class TestFailure
 {
     /**
-     * @var string
-     */
-    private $testName;
-
-    /**
-     * @var Test|null
+     * @var null|Test
      */
     protected $failedTest;
 
@@ -31,6 +26,10 @@ class TestFailure
      * @var Throwable
      */
     protected $thrownException;
+    /**
+     * @var string
+     */
+    private $testName;
 
     /**
      * Constructs a TestFailure with the given test and exception.
@@ -43,7 +42,7 @@ class TestFailure
         if ($failedTest instanceof SelfDescribing) {
             $this->testName = $failedTest->toString();
         } else {
-            $this->testName = get_class($failedTest);
+            $this->testName = \get_class($failedTest);
         }
 
         if (!$failedTest instanceof TestCase || !$failedTest->isInIsolation()) {
@@ -58,9 +57,9 @@ class TestFailure
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
-        return sprintf(
+        return \sprintf(
             '%s: %s',
             $this->testName,
             $this->thrownException->getMessage()
@@ -70,9 +69,11 @@ class TestFailure
     /**
      * Returns a description for the thrown exception.
      *
+     * @throws \InvalidArgumentException
+     *
      * @return string
      */
-    public function getExceptionAsString()
+    public function getExceptionAsString(): string
     {
         return self::exceptionToString($this->thrownException);
     }
@@ -82,29 +83,35 @@ class TestFailure
      *
      * @param Throwable $e
      *
+     * @throws \InvalidArgumentException
+     *
      * @return string
      */
-    public static function exceptionToString(Throwable $e)
+    public static function exceptionToString(Throwable $e): string
     {
         if ($e instanceof SelfDescribing) {
             $buffer = $e->toString();
 
             if ($e instanceof ExpectationFailedException && $e->getComparisonFailure()) {
-                $buffer = $buffer . $e->getComparisonFailure()->getDiff();
+                $buffer .= $e->getComparisonFailure()->getDiff();
             }
 
             if (!empty($buffer)) {
-                $buffer = trim($buffer) . "\n";
+                $buffer = \trim($buffer) . "\n";
             }
-        } elseif ($e instanceof Error) {
-            $buffer = $e->getMessage() . "\n";
-        } elseif ($e instanceof ExceptionWrapper) {
-            $buffer = $e->getClassName() . ': ' . $e->getMessage() . "\n";
-        } else {
-            $buffer = get_class($e) . ': ' . $e->getMessage() . "\n";
+
+            return $buffer;
         }
 
-        return $buffer;
+        if ($e instanceof Error) {
+            return $e->getMessage() . "\n";
+        }
+
+        if ($e instanceof ExceptionWrapper) {
+            return $e->getClassName() . ': ' . $e->getMessage() . "\n";
+        }
+
+        return \get_class($e) . ': ' . $e->getMessage() . "\n";
     }
 
     /**
@@ -112,7 +119,7 @@ class TestFailure
      *
      * @return string
      */
-    public function getTestName()
+    public function getTestName(): string
     {
         return $this->testName;
     }
@@ -125,9 +132,9 @@ class TestFailure
      *
      * @see Exception
      *
-     * @return Test|null
+     * @return null|Test
      */
-    public function failedTest()
+    public function failedTest(): ?Test
     {
         return $this->failedTest;
     }
@@ -137,7 +144,7 @@ class TestFailure
      *
      * @return Throwable
      */
-    public function thrownException()
+    public function thrownException(): Throwable
     {
         return $this->thrownException;
     }
@@ -147,7 +154,7 @@ class TestFailure
      *
      * @return string
      */
-    public function exceptionMessage()
+    public function exceptionMessage(): string
     {
         return $this->thrownException()->getMessage();
     }
@@ -158,8 +165,8 @@ class TestFailure
      *
      * @return bool
      */
-    public function isFailure()
+    public function isFailure(): bool
     {
-        return ($this->thrownException() instanceof AssertionFailedError);
+        return $this->thrownException() instanceof AssertionFailedError;
     }
 }

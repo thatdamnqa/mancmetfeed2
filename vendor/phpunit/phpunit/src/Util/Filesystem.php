@@ -13,13 +13,8 @@ namespace PHPUnit\Util;
 /**
  * Filesystem helpers.
  */
-class Filesystem
+final class Filesystem
 {
-    /**
-     * @var array
-     */
-    protected static $buffer = [];
-
     /**
      * Maps class names to source file names:
      *   - PEAR CS:   Foo_Bar_Baz -> Foo/Bar/Baz.php
@@ -29,9 +24,9 @@ class Filesystem
      *
      * @return string
      */
-    public static function classNameToFilename($className)
+    public static function classNameToFilename(string $className): string
     {
-        return str_replace(
+        return \str_replace(
             ['_', '\\'],
             DIRECTORY_SEPARATOR,
             $className

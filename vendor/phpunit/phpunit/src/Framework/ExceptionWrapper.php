@@ -18,7 +18,7 @@ use Throwable;
  * Re-instantiates Exceptions thrown by user-space code to retain their original
  * class names, properties, and stack traces (but without arguments).
  *
- * Unlike PHPUnit_Framework_Exception, the complete stack of previous Exceptions
+ * Unlike PHPUnit\Framework_\Exception, the complete stack of previous Exceptions
  * is processed.
  */
 class ExceptionWrapper extends Exception
@@ -29,7 +29,7 @@ class ExceptionWrapper extends Exception
     protected $className;
 
     /**
-     * @var ExceptionWrapper|null
+     * @var null|ExceptionWrapper
      */
     protected $previous;
 
@@ -42,7 +42,7 @@ class ExceptionWrapper extends Exception
         // @see http://php.net/manual/en/class.pdoexception.php#95812
         parent::__construct($t->getMessage(), (int) $t->getCode());
 
-        $this->className = get_class($t);
+        $this->className = \get_class($t);
         $this->file      = $t->getFile();
         $this->line      = $t->getLine();
 
@@ -58,25 +58,11 @@ class ExceptionWrapper extends Exception
     }
 
     /**
+     * @throws \InvalidArgumentException
+     *
      * @return string
      */
-    public function getClassName()
-    {
-        return $this->className;
-    }
-
-    /**
-     * @return ExceptionWrapper
-     */
-    public function getPreviousWrapped()
-    {
-        return $this->previous;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         $string = TestFailure::exceptionToString($this);
 
@@ -89,5 +75,21 @@ class ExceptionWrapper extends Exception
         }
 
         return $string;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClassName(): string
+    {
+        return $this->className;
+    }
+
+    /**
+     * @return ExceptionWrapper
+     */
+    public function getPreviousWrapped(): ?self
+    {
+        return $this->previous;
     }
 }

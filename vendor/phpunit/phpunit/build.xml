@@ -42,15 +42,23 @@
     </target>
 
     <target name="install-dependencies" unless="dependencies-installed" depends="-dependencies-installed,validate-composer-json" description="Install dependencies with Composer">
+        <copy file="${basedir}/composer.json" tofile="${basedir}/composer.json.bak"/>
+
+        <exec executable="${basedir}/build/tools/composer" taskname="composer">
+            <arg value="require"/>
+            <arg value="--no-update"/>
+            <arg value="phpunit/php-invoker:^2.0"/>
+        </exec>
+
         <exec executable="${basedir}/build/tools/composer" taskname="composer">
             <arg value="update"/>
             <arg value="--no-interaction"/>
             <arg value="--no-progress"/>
             <arg value="--no-ansi"/>
             <arg value="--no-suggest"/>
-            <arg value="--optimize-autoloader"/>
-            <arg value="--prefer-stable"/>
         </exec>
+
+        <move file="${basedir}/composer.json.bak" tofile="${basedir}/composer.json"/>
     </target>
 
     <target name="php-syntax-check" unless="php-syntax-check.done" description="Perform syntax check on PHP files">
@@ -116,17 +124,8 @@
 
     <target name="-phar-prepare" depends="clean,install-dependencies">
         <mkdir dir="${basedir}/build/phar"/>
-        <copy file="${basedir}/composer.json" tofile="${basedir}/composer.json.bak"/>
-
-        <exec executable="${basedir}/build/tools/composer">
-            <arg value="require"/>
-            <arg value="phpunit/php-invoker:~1.1"/>
-        </exec>
-
-        <move file="${basedir}/composer.json.bak" tofile="${basedir}/composer.json"/>
 
         <exec executable="${basedir}/build/phar-manifest.php" output="${basedir}/build/phar/manifest.txt"/>
-        <copy todir="${basedir}/build/phar" file="${basedir}/build/ca.pem" />
 
         <copy file="${basedir}/vendor/phpunit/php-code-coverage/LICENSE" tofile="${basedir}/build/phar/php-code-coverage/LICENSE"/>
         <copy todir="${basedir}/build/phar/php-code-coverage">
@@ -301,6 +300,27 @@
                 <include name="**/*.php" />
             </fileset>
         </copy>
+
+        <copy file="${basedir}/vendor/phar-io/manifest/LICENSE" tofile="${basedir}/build/phar/phar-io-manifest/LICENSE"/>
+        <copy todir="${basedir}/build/phar/phar-io-manifest">
+            <fileset dir="${basedir}/vendor/phar-io/manifest/src">
+                <include name="**/*.php" />
+            </fileset>
+        </copy>
+
+        <copy file="${basedir}/vendor/phar-io/version/LICENSE" tofile="${basedir}/build/phar/phar-io-version/LICENSE"/>
+        <copy todir="${basedir}/build/phar/phar-io-version">
+            <fileset dir="${basedir}/vendor/phar-io/version/src">
+                <include name="**/*.php" />
+            </fileset>
+        </copy>
+
+        <copy file="${basedir}/vendor/theseer/tokenizer/LICENSE" tofile="${basedir}/build/phar/theseer-tokenizer/LICENSE"/>
+        <copy todir="${basedir}/build/phar/theseer-tokenizer">
+            <fileset dir="${basedir}/vendor/theseer/tokenizer/src">
+                <include name="**/*.php" />
+            </fileset>
+        </copy>
     </target>
 
     <target name="-phar-build" depends="-phar-determine-version">
@@ -330,6 +350,9 @@
             <arg path="${basedir}/build/phar" />
         </exec>
 
+        <copy file="${basedir}/build/binary-phar-autoload.php.in" tofile="${basedir}/build/binary-phar-autoload.php"/>
+        <replace file="${basedir}/build/binary-phar-autoload.php" token="X.Y.Z" value="${_version}"/>
+
         <exec executable="${basedir}/build/tools/phpab" taskname="phpab">
             <arg value="--all" />
             <arg value="--nolower" />
@@ -340,13 +363,14 @@
             <arg value="--output" />
             <arg path="${basedir}/build/phpunit-${_version}.phar" />
             <arg value="--template" />
-            <arg path="${basedir}/build/binary-phar-autoload.php.in" />
+            <arg path="${basedir}/build/binary-phar-autoload.php" />
             <arg path="${basedir}/build/phar" />
         </exec>
 
         <chmod file="${basedir}/build/phpunit-${_version}.phar" perm="ugo+rx"/>
 
         <delete dir="${basedir}/build/phar"/>
+        <delete file="${basedir}/build/binary-phar-autoload.php"/>
     </target>
 
     <target name="-phar-determine-version">

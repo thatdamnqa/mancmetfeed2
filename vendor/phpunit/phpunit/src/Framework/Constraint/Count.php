@@ -10,24 +10,34 @@
 namespace PHPUnit\Framework\Constraint;
 
 use Countable;
+use Generator;
+use Iterator;
 use IteratorAggregate;
 use Traversable;
-use Generator;
 
 class Count extends Constraint
 {
     /**
      * @var int
      */
-    protected $expectedCount = 0;
+    private $expectedCount = 0;
 
-    /**
-     * @param int $expected
-     */
-    public function __construct($expected)
+    public function __construct(int $expected)
     {
         parent::__construct();
+
         $this->expectedCount = $expected;
+    }
+
+    /**
+     * @return string
+     */
+    public function toString(): string
+    {
+        return \sprintf(
+            'count matches %d',
+            $this->expectedCount
+        );
     }
 
     /**
@@ -38,38 +48,43 @@ class Count extends Constraint
      *
      * @return bool
      */
-    protected function matches($other)
+    protected function matches($other): bool
     {
         return $this->expectedCount === $this->getCountOf($other);
     }
 
     /**
-     * @param mixed $other
-     *
-     * @return bool
+     * @param array|\Countable|\Traversable $other
      */
-    protected function getCountOf($other)
+    protected function getCountOf($other): ?int
     {
-        if ($other instanceof Countable || is_array($other)) {
-            return count($other);
-        } elseif ($other instanceof Traversable) {
-            if ($other instanceof IteratorAggregate) {
-                $iterator = $other->getIterator();
-            } else {
-                $iterator = $other;
+        if ($other instanceof Countable || \is_array($other)) {
+            return \count($other);
+        }
+
+        if ($other instanceof Traversable) {
+            while ($other instanceof IteratorAggregate) {
+                $other = $other->getIterator();
             }
+
+            $iterator = $other;
 
             if ($iterator instanceof Generator) {
                 return $this->getCountOfGenerator($iterator);
             }
 
+            if (!$iterator instanceof Iterator) {
+                return \iterator_count($iterator);
+            }
+
             $key   = $iterator->key();
-            $count = iterator_count($iterator);
+            $count = \iterator_count($iterator);
 
             // Manually rewind $iterator to previous key, since iterator_count
             // moves pointer.
             if ($key !== null) {
                 $iterator->rewind();
+
                 while ($iterator->valid() && $key !== $iterator->key()) {
                     $iterator->next();
                 }
@@ -82,15 +97,11 @@ class Count extends Constraint
     /**
      * Returns the total number of iterations from a generator.
      * This will fully exhaust the generator.
-     *
-     * @param Generator $generator
-     *
-     * @return int
      */
-    protected function getCountOfGenerator(Generator $generator)
+    protected function getCountOfGenerator(Generator $generator): int
     {
         for ($count = 0; $generator->valid(); $generator->next()) {
-            $count += 1;
+            ++$count;
         }
 
         return $count;
@@ -102,26 +113,13 @@ class Count extends Constraint
      * The beginning of failure messages is "Failed asserting that" in most
      * cases. This method should return the second part of that sentence.
      *
-     * @param mixed $other Evaluated value or object.
-     *
-     * @return string
+     * @param mixed $other evaluated value or object
      */
-    protected function failureDescription($other)
+    protected function failureDescription($other): string
     {
-        return sprintf(
+        return \sprintf(
             'actual size %d matches expected size %d',
             $this->getCountOf($other),
-            $this->expectedCount
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function toString()
-    {
-        return sprintf(
-            'count matches %d',
             $this->expectedCount
         );
     }

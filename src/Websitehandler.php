@@ -4,7 +4,7 @@ namespace Thatdamnqa\MancMetFeed;
 /**
   * Handle the Metrolink website
   **/
-class WebsiteHandler implements WebsiteHandlerInterface
+class Websitehandler implements WebsiteHandlerInterface
 {
     /**
      * @var string Cached data from the API

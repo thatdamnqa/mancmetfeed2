@@ -1,13 +1,13 @@
 <?php
 namespace Thatdamnqa\MancMetFeed;
-require_once '../config/config.php';
+require_once 'config/config.php';
 
 use Thatdamnqa\MancMetFeed\Services\TwitterNotifierClientFactory;
 require __DIR__ . '/../vendor/autoload.php';
 
 $tweetClass = new Tweet(TwitterNotifierClientFactory::getClient());
 $metrolinkClass = new Metrolink(new \DateTimeImmutable());
-$websiteHandlerClass = new WebsiteHandler(MMS_API_URL);
+$websiteHandlerClass = new Websitehandler(MMS_API_URL);
 $statusClass = new Status($websiteHandlerClass, $metrolinkClass);
 
 $statusString = $statusClass->getStatusString();

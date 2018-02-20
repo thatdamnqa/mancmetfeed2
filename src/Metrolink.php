@@ -11,7 +11,7 @@ class Metrolink implements MetrolinkInterface
       */
     private $now;
 
-    public function __construct(DateTimeInterface $date)
+    public function __construct(\DateTimeInterface $date)
     {
         $this->now = $date;
     }

@@ -5,8 +5,6 @@ use PHPUnit\Framework\TestCase;
 use \Thatdamnqa\MancMetFeed\Metrolink;
 use Thatdamnqa\MancMetFeed\Status;
 use Thatdamnqa\MancMetFeed\WebsiteHandlerInterface;
-use Thatdamnqa\MancMetFeedTest\DataProvider\Status as DataProvider;
-
 
 /**
  * @covers Metrolink
@@ -16,7 +14,7 @@ final class StatusTest extends TestCase
     public function setUp() {
     }
 
-    /** @dataProvider DataProvider::getStatusStringsProvider */
+    /** @dataProvider Thatdamnqa\MancMetFeedTest\DataProvider\Status::getStatusStringsProvider */
     public function testGetStatusString($datetime, $expected, $json)
     {
         $website = $this->createMock(WebsiteHandlerInterface::class);

@@ -1,10 +1,12 @@
 <?php
+namespace Thatdamnqa\MancMetFeedTest;
+
 use PHPUnit\Framework\TestCase;
-require_once('config/config.dist.php');
-require_once 'class/metrolink.class.php';
-require_once 'class/status.class.php';
-require_once 'class/promises/websitehandler.interface.php';
-require_once 'unittests/dataproviders/status.dataprovider.php';
+use \Thatdamnqa\MancMetFeed\Metrolink;
+use Thatdamnqa\MancMetFeed\Status;
+use Thatdamnqa\MancMetFeed\WebsiteHandlerInterface;
+use Thatdamnqa\MancMetFeedTest\DataProvider\Status as DataProvider;
+
 
 /**
  * @covers Metrolink
@@ -14,7 +16,7 @@ final class StatusTest extends TestCase
     public function setUp() {
     }
 
-    /** @dataProvider Dataprovider\Status::getStatusStringsProvider */
+    /** @dataProvider DataProvider::getStatusStringsProvider */
     public function testGetStatusString($datetime, $expected, $json)
     {
         $website = $this->createMock(WebsiteHandlerInterface::class);

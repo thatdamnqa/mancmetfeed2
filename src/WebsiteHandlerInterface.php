@@ -1,5 +1,7 @@
 <?php
 
+namespace Thatdamnqa\MancMetFeed;
+
 /**
  * Handle the Metrolink website
  **/

@@ -1,5 +1,9 @@
 <?php
 
+namespace Thatdamnqa\MancMetFeed;
+
+use stdClass;
+
 /**
   * Gets, and parses, the line status.
   **/

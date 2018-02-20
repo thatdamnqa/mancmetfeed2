@@ -1,12 +1,22 @@
 <?php
-require_once('class/3rdparty/OAuth.php');
-require_once('class/3rdparty/twitter.class.php');
+
+namespace Thatdamnqa\MancMetFeed;
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 
 /**
-  * Generate tweet string
-  **/
+ * Generate tweet string
+ **/
 class Tweet
 {
+    private $client;
+
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
+
     /**
      * Generate tweet from body
      * Returns array of tweets
@@ -29,14 +39,14 @@ class Tweet
         $tweet_lines = explode("\n", $status);
         $tweets = [''];
         foreach ($tweet_lines as $n => $line) {
-                $current_tweet_id = count($tweets) - 1;
-                $length_of_current_tweet = strlen($tweets[$current_tweet_id]);
-                $length_of_line_to_add = strlen($line);
-                if ($length_of_current_tweet + $length_of_line_to_add < $tweetlength) {
-                    $tweets[$current_tweet_id] .= $line . "\n";
-                } else {
-                    $tweets[] = $line . "\n";
-                }
+            $current_tweet_id = count($tweets) - 1;
+            $length_of_current_tweet = strlen($tweets[$current_tweet_id]);
+            $length_of_line_to_add = strlen($line);
+            if ($length_of_current_tweet + $length_of_line_to_add < $tweetlength) {
+                $tweets[$current_tweet_id] .= $line . "\n";
+            } else {
+                $tweets[] = $line . "\n";
+            }
         }
 
         return $tweets;
@@ -66,13 +76,33 @@ class Tweet
             return true;
         }
 
-        $twitter = new Twitter(
-            TWITTER_CONSUMERKEY,
-            TWITTER_CONSUMERSECRET,
-            TWITTER_ACCESSTOKEN,
-            TWITTER_ACCESSTOKENSECRET
+        $values = [
+            'status'              => $tweet,
+        ];
+
+        if (null !== $original_tweet_id) {
+            $values['in_reply_to_status_id'] = $original_tweet_id;
+        }
+
+        $request = new Request(
+            'POST',
+            'statuses/update.json?' . $this->formUrlEncode($values)
         );
 
-        return $twitter->send($tweet, $original_tweet_id);
+        try {
+            $response = $this->client->send($request);
+            $responseData = json_decode($response->getBody()->getContents(), true);
+
+            return $responseData['id_str'];
+        } catch (\Exception $e) {
+            //
+        }
+
+        return false;
+    }
+
+    private function formUrlEncode(array $values) : string
+    {
+        return http_build_query($values);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+namespace Thatdamnqa\MancMetFeed;
 
 /**
  * Gets various Metrolink variables

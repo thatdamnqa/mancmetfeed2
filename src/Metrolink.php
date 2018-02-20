@@ -1,5 +1,5 @@
 <?php
-require_once 'promises/metrolink.interface.php';
+namespace Thatdamnqa\MancMetFeed;
 
 /**
   * Gets various Metrolink variables

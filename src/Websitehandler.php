@@ -1,5 +1,5 @@
 <?php
-require_once 'promises/websitehandler.interface.php';
+namespace Thatdamnqa\MancMetFeed;
 
 /**
   * Handle the Metrolink website

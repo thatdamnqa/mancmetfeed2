@@ -1,6 +1,6 @@
 <?php
-
 namespace Thatdamnqa\MancMetFeed;
+require_once 'config/config.php';
 
 use Thatdamnqa\MancMetFeed\Services\TwitterNotifierClientFactory;
 require __DIR__ . '/../vendor/autoload.php';

@@ -1,8 +1,9 @@
 <?php
 namespace Thatdamnqa\MancMetFeedTest;
+require_once 'config/config.php';
 
 use PHPUnit\Framework\TestCase;
-use \Thatdamnqa\MancMetFeed\Metrolink;
+use Thatdamnqa\MancMetFeed\Metrolink;
 use Thatdamnqa\MancMetFeed\Status;
 use Thatdamnqa\MancMetFeed\WebsiteHandlerInterface;
 

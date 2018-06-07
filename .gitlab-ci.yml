@@ -2,20 +2,15 @@
 # see https://docs.gitlab.com/ce/ci/yaml/README.html for all available options
 
 before_script:
-  - echo "Building mancmetfeed"
-   
+
 after_script:
-  - echo "Build complete"
- 
-# TODO: UPDATE PHP ON SERVER TO RUN PHPUNIT   
-#test1:
-#  stage: test
-#  script: 
-#    - cd /srv/test/mancmetfeed2
-#    - git pull
-#    - vendor/bin/phpunit tests
-   
-deploy1:
-  stage: deploy
+
+test1:
+  stage: test
   script:
-   - git pull
+    - vendor/bin/phpunit tests
+   
+#deploy1:
+#  stage: deploy
+#  script:
+#   - git pull

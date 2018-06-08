@@ -13,4 +13,5 @@ after_script:
 deploy1:
   stage: deploy
   script:
+     - cd /srv/mancmetfeed2/
      - git pull

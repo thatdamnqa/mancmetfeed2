@@ -10,7 +10,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "d2:78:46:57:a6:6a:1f:e7:e0:03:e7:62:3a:d2:0d:4c"
+            - "69:f9:57:1c:7d:5d:be:7b:81:ca:ff:27:9d:0a:b4:0e"
       - run:
           name: Run git-update.sh
           command: ssh ci@thatdamnqa.com "cd /srv/mancmetfeed2; ./git-update.sh"

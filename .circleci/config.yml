@@ -4,21 +4,16 @@
 #
 version: 2
 jobs:
-  test:
+  build:
     machine:
       enabled: true
     steps:
-      - run:
-          name: Run unit tests
-          command:
-  deploy:
-    machine:
-      enabled: true
-    steps:
-      - add_ssh_keys
+      - add_ssh_keys:
+          fingerprints:
+            - "d2:78:46:57:a6:6a:1f:e7:e0:03:e7:62:3a:d2:0d:4c"
       - run:
           name: Run git-update.sh
-          command: ssh ci@thatdamnqa.com "cd /srv/danshaw; ./git-update.sh"
+          command: ssh ci@thatdamnqa.com "cd /srv/mancmetfeed2; ./git-update.sh"
     branches:
       only:
         - master

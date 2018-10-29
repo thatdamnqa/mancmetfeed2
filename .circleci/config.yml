@@ -1,0 +1,24 @@
+# PHP CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+#
+version: 2
+jobs:
+  test:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Run unit tests
+          command:
+  deploy:
+    machine:
+      enabled: true
+    steps:
+      - add_ssh_keys
+      - run:
+          name: Run git-update.sh
+          command: ssh ci@thatdamnqa.com "cd /srv/danshaw; ./git-update.sh"
+    branches:
+      only:
+        - master

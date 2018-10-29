@@ -1,0 +1,17 @@
+# This file is a template, and might need editing before it works on your project.
+# see https://docs.gitlab.com/ce/ci/yaml/README.html for all available options
+
+before_script:
+
+after_script:
+
+#test1:
+#  stage: test
+#  script:
+#    - vendor/bin/phpunit tests
+   
+deploy1:
+  stage: deploy
+  script:
+     - cd /srv/mancmetfeed2/
+     - git pull
